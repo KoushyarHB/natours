@@ -2,7 +2,22 @@ const express = require('express');
 const fs = require('fs');
 const app = express();
 
+// the use method is the method we use to add middleware to our middleware stack
+// in the next line express.json returns a function and that function is then added to our middleware stack
 app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log('Hello from the middleware');
+  // if we dont use next the request response cycle gets stuck and we can never send a response back to the client
+  next();
+});
+
+// if we moved this middleware to in between the routes then it wouldn't work for some routes
+
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
 
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
@@ -12,6 +27,7 @@ const getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
     results: tours.length,
+    requestedAt: req.requestTime,
     data: {
       tours,
     },
@@ -122,6 +138,15 @@ const deleteTour = (req, res) => {
 // app.delete('/api/v1/tours/:id', deleteTour);
 
 app.route('/api/v1/tours').get(getAllTours).post(createTour);
+
+// app.use((req, res, next) => {
+//   console.log('Hello from the middleware');
+//   next();
+// });
+
+// Why aren't we seeing the log?
+// Because the middleware in line 134 comes before the middleware in line 136 and the one above ends the request response cycly with the function inside of it (getAllTours or createTour)
+
 app
   .route('/api/v1/tours/:id')
   .get(getTour)
