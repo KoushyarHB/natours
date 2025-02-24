@@ -268,20 +268,28 @@ const deleteUser = (req, res) => {
 
 //========== 3) ROUTES ==========
 
-// Creating the router
-const tourRouter = express.Router();
-const userRouter = express.Router();
+app.route('/api/v1/tours').get(getAllTours).post(createTour);
 
-// Using the router
-tourRouter.route('/').get(getAllTours).post(createTour);
-tourRouter.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
+// app.use((req, res, next) => {
+//   console.log('Hello from the middleware');
+//   next();
+// });
 
-userRouter.route('/').get(getAllUsers).post(createUser);
-userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
+// Why aren't we seeing the log?
+// Because the middleware in line 134 comes before the middleware in line 136 and the one above ends the request response cycly with the function inside of it (getAllTours or createTour)
 
-// Mounting the router using middlwares
-app.use('/api/v1/tours', tourRouter);
-app.use('/api/v1/users', userRouter);
+app
+  .route('/api/v1/tours/:id')
+  .get(getTour)
+  .patch(updateTour)
+  .delete(deleteTour);
+
+app.route('/api/v1/users').get(getAllUsers).post(createUser);
+app
+  .route('/api/v1/users/:id')
+  .get(getUser)
+  .patch(updateUser)
+  .delete(deleteUser);
 
 //========== 4) START SERVER ==========
 
