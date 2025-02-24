@@ -63,6 +63,48 @@ app.post('/api/v1/tours', (req, res) => {
   );
 });
 
+//The PATCH request works in your code because JavaScript objects are referenced in memory.
+
+// Why it Works Without Explicitly Updating tours:
+//   tours.find((tour) => tour.id === id) returns a reference to the object inside the tours array.
+//   Object.assign(tour, req.body) modifies the same object in memory, which means tours is also updated automatically.
+//   Since tours holds references to the objects, any modification to tour is reflected in tours.
+
+app.patch('/api/v1/tours/:id', (req, res) => {
+  const id = req.params.id * 1;
+  const tour = tours.find((tour) => tour.id === id);
+
+  if (!tour) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'tour not found',
+    });
+  }
+
+  // Update the tour with the new data
+  Object.assign(tour, req.body);
+
+  // Save the updated tours array back to the file
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    (err) => {
+      if (err) {
+        return res.status(500).json({
+          status: 'error',
+          message: 'Could not update tour',
+        });
+      }
+      res.status(200).json({
+        status: 'success',
+        data: {
+          tour,
+        },
+      });
+    }
+  );
+});
+
 // express is a function which upon calling adds a bunch of methods to app
 // first one we are calling is listen:
 // we usually put app.listen at the end
