@@ -81,10 +81,8 @@ app.patch('/api/v1/tours/:id', (req, res) => {
     });
   }
 
-  // Update the tour with the new data
   Object.assign(tour, req.body);
 
-  // Save the updated tours array back to the file
   fs.writeFile(
     `${__dirname}/dev-data/data/tours-simple.json`,
     JSON.stringify(tours),
@@ -100,6 +98,38 @@ app.patch('/api/v1/tours/:id', (req, res) => {
         data: {
           tour,
         },
+      });
+    }
+  );
+});
+
+app.delete('/api/v1/tours/:id', (req, res) => {
+  const id = req.params.id * 1;
+  const tourIndex = tours.findIndex((tour) => tour.id === id);
+
+  if (tourIndex === -1) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'tour not found',
+    });
+  }
+
+  tours.splice(tourIndex, 1);
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    (err) => {
+      if (err) {
+        return res.status(500).json({
+          status: 'error',
+          message: 'Could not delete tour',
+        });
+      }
+      res.status(204).json({
+        // 204 No Content
+        status: 'success',
+        data: null,
       });
     }
   );
