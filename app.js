@@ -21,6 +21,29 @@ app.get('/api/v1/tours', (req, res) => {
   });
 }); // 1. this (req,res) => {} is called "route handler"
 
+// app.get('/api/v1/tours/:id/:x/:y', (req, res) => {
+//   console.log(req.params);
+// });
+
+app.get('/api/v1/tours/:id', (req, res) => {
+  const id = req.params.id * 1;
+  const tour = tours.find((tour) => tour.id === id);
+
+  if (!tour) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'tour not found',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour,
+    },
+  });
+});
+
 app.post('/api/v1/tours', (req, res) => {
   //   console.log(req.body); // body is a property that is gonna be available on the request because we used the middleware above
   //   res.send('Done');
