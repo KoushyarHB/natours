@@ -7,8 +7,9 @@ const userRouter = require('./routes/userRoutes');
 //========== MIDDLEWARES ==========
 
 app.use(morgan('dev'));
-
 app.use(express.json());
+// using a built in express middleware to show static files
+app.use(express.static(`${__dirname}/public`));
 
 app.use((req, res, next) => {
   console.log('Hello from one of the middlewares');
