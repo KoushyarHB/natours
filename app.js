@@ -11,12 +11,13 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 app.use((req, res, next) => {
-  console.log('Hello from the middleware');
+  console.log('Hello from one of the middlewares');
   next();
 });
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
+  console.log(req.requestTime);
   next();
 });
 
