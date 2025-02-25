@@ -18,6 +18,21 @@ exports.checkID = (req, res, next, val) => {
   next();
 };
 
+exports.checkBody = (req, res, next) => {
+  const requiredFields = ['name', 'price'];
+
+  for (const field of requiredFields) {
+    if (!req.body[field]) {
+      return res.status(400).json({
+        status: 'fail',
+        message: `Missing required field: ${field}`,
+      });
+    }
+  }
+
+  next();
+};
+
 exports.getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
