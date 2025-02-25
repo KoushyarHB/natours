@@ -6,7 +6,12 @@ const userRouter = require('./routes/userRoutes');
 
 //========== MIDDLEWARES ==========
 
-app.use(morgan('dev'));
+// we can read the env variable from process once and then use it everywhere
+// here we did it in the server and are using it in the app
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
 app.use(express.json());
 // using a built in express middleware to show static files
 app.use(express.static(`${__dirname}/public`));
