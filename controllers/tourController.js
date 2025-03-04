@@ -19,20 +19,20 @@ const Tour = require('./../models/tourModel');
 //   next();
 // };
 
-exports.checkBody = (req, res, next) => {
-  const requiredFields = ['name', 'price'];
+// exports.checkBody = (req, res, next) => {
+//   const requiredFields = ['name', 'price'];
 
-  for (const field of requiredFields) {
-    if (!req.body[field]) {
-      return res.status(400).json({
-        status: 'fail',
-        message: `Missing required field: ${field}`,
-      });
-    }
-  }
+//   for (const field of requiredFields) {
+//     if (!req.body[field]) {
+//       return res.status(400).json({
+//         status: 'fail',
+//         message: `Missing required field: ${field}`,
+//       });
+//     }
+//   }
 
-  next();
-};
+//   next();
+// };
 
 exports.getAllTours = (req, res) => {
   res.status(200).json({
@@ -64,7 +64,7 @@ exports.getTour = (req, res) => {
   });
 };
 
-exports.createTour = (req, res) => {
+exports.createTour = async (req, res) => {
   // const newId = tours[tours.length - 1].id + 1;
   // const newTour = Object.assign({ id: newId }, req.body);
   // tours.push(newTour);
@@ -75,6 +75,24 @@ exports.createTour = (req, res) => {
   //     res.status(201).json({ status: 'success', data: { tour: newTour } });
   //   }
   // );
+
+  try {
+    // const newTour = new Tour({})
+    // newTour.save()
+
+    const newTour = await Tour.create(req.body);
+
+    res.status(201).json({
+      status: 'success',
+      data: { tour: newTour },
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: 'fail',
+      // message: error,
+      message: 'Invalid data sent',
+    });
+  }
 };
 
 exports.updateTour = (req, res) => {

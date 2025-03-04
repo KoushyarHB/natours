@@ -2,7 +2,7 @@ const userController = require('../controllers/userController');
 const express = require('express');
 const router = express.Router();
 
-router.param('id', userController.checkID);
+// router.param('id', userController.checkID);
 
 router
   .route('/')
