@@ -1,39 +1,6 @@
 const fs = require('fs');
 const Tour = require('./../models/tourModel');
 
-// const tours = JSON.parse(
-//   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
-// );
-
-// exports.checkID = (req, res, next, val) => {
-//   console.log(`Tour id is : ${val}`);
-//   if (req.params.id * 1 > tours.length) {
-//     console.log(`Tour id ${val} is invalid`);
-//     return res.status(404).json({
-//       status: 'fail',
-//       message: 'Invalid ID',
-//     });
-//   } else {
-//     console.log(`Tour id ${val} is valid`);
-//   }
-//   next();
-// };
-
-// exports.checkBody = (req, res, next) => {
-//   const requiredFields = ['name', 'price'];
-
-//   for (const field of requiredFields) {
-//     if (!req.body[field]) {
-//       return res.status(400).json({
-//         status: 'fail',
-//         message: `Missing required field: ${field}`,
-//       });
-//     }
-//   }
-
-//   next();
-// };
-
 exports.getAllTours = async (req, res) => {
   try {
     const tours = await Tour.find();
